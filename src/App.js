@@ -1,7 +1,6 @@
 import './App.css';
 // import { BrowserRouter } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Footer from './components/Footer/Footer';
 // import Sponsors from './components/Sponsors/rendersponsors.js';
 import AuthProvider from './Context/AuthManager';
 // import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -17,7 +16,7 @@ const App = () => {
 		<AuthProvider>
 			<Navbar />
 			<RoutesManager />
-			<Footer />
+			{/* <Footer /> */}
 		</AuthProvider>
 		// </GoogleOAuthProvider>
 	);

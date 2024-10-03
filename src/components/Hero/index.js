@@ -1,212 +1,213 @@
-import React, { useRef, useState } from "react";
-import rasengan from './Rasengan2.png';
-import spreedate from './LOGOS-052.png';
-import petalImager from './petal.png'
+import React, { useRef, useEffect, useState } from "react";
 import './index.css';
-// import { useAuth } from "../../Context/AuthManager";
 import Loader from "../Loader";
-import { useEffect } from "react";
+import main_logo_removebg from "./main_logo-removebg.png";
 
-var mar = 10;
-var imsz = 264;
-const COLSZ = mar + imsz;
+// Countdown Component
+const CountdownTimer = ({ targetDate }) => {
+    const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const now = new Date();
+            const diff = targetDate - now;
+            if (diff < 0) {
+                clearInterval(interval);
+                setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            setTimeLeft({ days, hours, minutes, seconds });
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [targetDate]);
+
+    return (
+        <div className="countdown-container">
+            <p className="stay-tuned">Coming Soon...</p>
+            <div className="countdown-clock">
+                <div className="time-box">
+                    <span>{timeLeft.days}</span>
+                    <span className="time-label">Days</span>
+                </div>
+                <div className="time-box">
+                    <span>{timeLeft.hours}</span>
+                    <span className="time-label">Hours</span>
+                </div>
+                <div className="time-box">
+                    <span>{timeLeft.minutes}</span>
+                    <span className="time-label">Minutes</span>
+                </div>
+                <div className="time-box">
+                    <span>{timeLeft.seconds}</span>
+                    <span className="time-label">Seconds</span>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 const Hero = () => {
+    const [loading, setLoading] = useState(true);
+    const targetDate = new Date("2024-11-08T12:00:00Z"); // Target date
 
-	const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        Promise.allSettled(Array.from(document.images).filter(img => !img.complete).map(img => new Promise(resolve => {
+            img.onload = img.onerror = resolve;
+        })))
+            .then(() => {
+                console.log('Images finished loading');
+                setLoading(false);
+            });
+    }, []);
 
-	//loading effect
-	useEffect(() => {
-		// console.time("im");
-		Promise.all(Array.from(document.images).filter(img => !img.complete).map(img => new Promise(resolve => {
-			img.onload = img.onerror = resolve;
-		})))
-			.then(() => {
-				console.log('Images finished loading');
-				setLoading(false);
-			}).catch(() => {
-				console.log('Some images failed to load');
-			});
-	}, []);
+    const WebCanvas = () => {
+        const canvasRef = useRef(null);
+        const mousePos = useRef({ x: 0, y: 0 });
+        const [ctx, setCtx] = useState(null);
+        const [points, setPoints] = useState([]);
 
-	// const { user } = useAuth();
+        useEffect(() => {
+            const canvas = canvasRef.current;
+            if (!canvas) return;
 
-	let width = window.innerWidth - mar;
-	let numCols = Math.max(3, Math.ceil(width / COLSZ));
-	let colsz = width / numCols;
-	document.querySelector(":root").style.setProperty('--imsz', colsz - mar + 'px');
+            const context = canvas.getContext('2d');
+            setCtx(context);
 
+            // Set canvas dimensions
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
 
-	// const updateSpotlight = (e) => {
-	//     let x = ((e.pageX / window.innerWidth) * 100).toFixed(0);
-	//     let y = ((e.pageY / window.innerHeight) * 100).toFixed(0);
+            const handleResize = () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                setPoints([]); // Clear points
+                initPoints(); // Reinitialize points
+            };
 
-	//     if (ref) ref.style.background = `radial-gradient(circle at ${x}% ${y}%, ${size}`
-	// };
-	// function play(e) {
-	//     let myAudio = document.querySelector("audio");
-	//     myAudio.paused ? myAudio.play() : myAudio.pause();
-	//     e.classList.toggle('pressed')
-	//     let mystyle1=document.getElementsByClassName("myid1")[0];
-	//     let mystyle2=document.getElementsByClassName("myid2")[0];
-	//     console.log(mystyle1.classList);
-	//     console.log(mystyle2.classList);
-	//     mystyle1.classList.toggle('mystyle1');
-	//     mystyle2.classList.toggle('mystyle2');
-	//   }
+            const initPoints = () => {
+                const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
 
-	// const mouseMove = (e) => {
-	//     if(traceback) clearInterval(traceback);
-	//     traceback = 0;
-	//     updateSpotlight(e);
-	// }
-	// const mouseLeave = (e) => {
-	//     if (!ref) return;
-	//     let s = ref.style.background;
-	//     let x = parseInt(s.substring(26));
-	//     let y = parseInt(s.substring(30));
-	//     if(traceback) mouseMove(e);
-	//     traceback = setInterval(() => {
-	//         if(!ref) {
-	//             clearInterval(traceback);
-	//             return;
-	//         }
-	//         ref.style.background = `radial-gradient(circle at ${x}% ${y}%, ${size}`;
-	//         x = x + (50 - x) / 100;
-	//         y = y + (50 - y) / 100;
-	//     }, 10)
-	// }
+    const screenArea = screenWidth * screenHeight;
+    
+    // Set the number of points based on screen area
+    const baseArea = 1000000;  // Set a base area, e.g., 1000000 pixels (1000x1000)
+               const numPoints = Math.floor((screenArea / baseArea) * 500);
+                const newPoints = [];
+                for (let i = 0; i < numPoints; i++) {
+                    newPoints.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        vx: (Math.random() - 0.5) * 1.5, // Random speed
+                        vy: (Math.random() - 0.5) * 1.5,
+                        isFollowing: false, // Flag to track if the point is following the cursor
+                    });
+                }
+                setPoints(newPoints);
+            };
 
-	const PetalCanvas = () => {
-		const canvasRef = useRef(null);
-		const [ctx, setCtx] = useState(null);
-		const [petalArray, setPetalArray] = useState([]);
-		const [petalImg, setPetalImg] = useState(new Image());
+            window.addEventListener('resize', handleResize);
+            initPoints();
 
-		useEffect(() => {
-			const canvas = canvasRef.current;
-			if (!canvas) return; // Check if canvas exists
+            return () => {
+                window.removeEventListener('resize', handleResize);
+            };
+        }, []);
 
-			const context = canvas.getContext('2d');
-			setCtx(context);
+        const drawLines = (pointA, pointB) => {
+            const dist = Math.sqrt(
+                Math.pow(pointA.x - pointB.x, 2) + Math.pow(pointA.y - pointB.y, 2)
+            );
+            if (dist < 100) {  // Distance threshold for drawing lines
+                ctx.beginPath();
+                ctx.moveTo(pointA.x, pointA.y);
+                ctx.lineTo(pointB.x, pointB.y);
+                ctx.strokeStyle = `rgba(173, 216, 230, ${1 - dist / 100})`; // Light blue color
+                ctx.lineWidth = 0.5; // Thinner lines
+                ctx.stroke();
+            }
+        };
 
-			canvas.width = window.innerWidth;
-			canvas.height = window.innerHeight;
+        const movePoints = () => {
+            points.forEach(point => {
+                if (point.isFollowing) {
+                    // Move point towards the cursor with increased speed
+                    point.x += (mousePos.current.x - point.x) * 0.15;
+                    point.y += (mousePos.current.y - point.y) * 0.15;
+                } else {
+                    point.x += point.vx;
+                    point.y += point.vy;
 
-			const handleResize = () => {
-				canvas.width = window.innerWidth;
-				canvas.height = window.innerHeight;
-			};
+                    // Bounce off edges
+                    if (point.x > canvasRef.current.width || point.x < 0) point.vx *= -1;
+                    if (point.y > canvasRef.current.height || point.y < 0) point.vy *= -1;
+                }
+            });
+        };
 
-			window.addEventListener('resize', handleResize);
+        useEffect(() => {
+            const animate = () => {
+                const canvas = canvasRef.current;
+                if (ctx && points.length > 0 && canvas) { // Check for null
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    movePoints();
 
-			return () => {
-				window.removeEventListener('resize', handleResize);
-			};
-		}, []);
+                    // Draw lines between nearby points
+                    points.forEach((pointA, index) => {
+                        points.forEach((pointB, i) => {
+                            if (i > index) {
+                                drawLines(pointA, pointB);
+                            }
+                        });
+                    });
+                    window.requestAnimationFrame(animate);
+                }
+            };
+            window.requestAnimationFrame(animate);
+        }, [ctx, points]);
 
-		useEffect(() => {
-			const loadPetalImg = () => {
-				const img = new Image();
-				img.src = petalImager;
-				img.onload = () => setPetalImg(img);
-			};
-			loadPetalImg();
-		}, []);
+        // Track mouse movement
+        const handleMouseMove = (e) => {
+            mousePos.current.x = e.clientX;
+            mousePos.current.y = e.clientY;
+             // console.log("inside mouse function");
+            points.forEach(point => {
+                const dist = Math.sqrt(
+                    Math.pow(point.x - mousePos.current.x, 2) + Math.pow(point.y - mousePos.current.y, 2)
+                );
+                point.isFollowing = dist < 50; // Set isFollowing to true if cursor is close
+            });
+        };
+   
+        return <canvas ref={canvasRef} onMouseMove={handleMouseMove}></canvas>;
+    };
 
-		useEffect(() => {
-			if (ctx && petalImg) {
-				const TOTAL = 200;
-				const newPetalArray = [];
-				for (let i = 0; i < TOTAL; i++) {
-					newPetalArray.push(new Petal(ctx, petalImg));
-				}
-				setPetalArray(newPetalArray);
-			}
-		}, [ctx, petalImg]);
+    return (
+        <div>
+            {loading && <Loader />}
+            <div className="relative flex overflow-hidden mx-auto w-full">
+                <WebCanvas />
+                <div className="absolute h-full w-full top-0 left-0 spotlight opacity-95"></div>
 
-		useEffect(() => {
-			if (ctx && petalArray.length > 0) {
-				const render = () => {
-					if (canvasRef.current) {
-						ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-						petalArray.forEach(petal => petal.animate());
-						window.requestAnimationFrame(render);
-					}
-				};
-				window.requestAnimationFrame(render);
-			}
-		}, [ctx, petalArray]);
+                <div className='heading1 flex flex-col justify-center items-center' style={{ 'background': 'transparent' }}>
+                    <div className="spree-title" style={{ 'padding': '0 25px' }}>
+                        <img src={main_logo_removebg} alt="Spree dates" />
+                    </div>
+                    {/* Countdown Clock */}
+                    <CountdownTimer targetDate={targetDate} />
+                </div>
 
-		return <canvas ref={canvasRef}></canvas>;
-	};
-
-	class Petal {
-		constructor(ctx, img) {
-			this.x = Math.random() * ctx.canvas.width;
-			this.y = (Math.random() * ctx.canvas.height * 2) - ctx.canvas.height;
-			this.w = 25 + Math.random() * 15;
-			this.h = 20 + Math.random() * 10;
-			this.opacity = this.w / 40;
-			this.flip = Math.random();
-			this.xSpeed = 0.8 + Math.random() * 8;
-			this.ySpeed = 0.8 + Math.random() * 4;
-			this.flipSpeed = Math.random() * 0.03;
-			this.ctx = ctx;
-			this.img = img;
-		}
-
-		draw() {
-			if (!this.ctx) return; // Check if ctx exists
-
-			if (this.y > this.ctx.canvas.height || this.x > this.ctx.canvas.width) {
-				this.x = -this.img.width;
-				this.y = (Math.random() * this.ctx.canvas.height * 2) - this.ctx.canvas.height;
-				this.xSpeed = 0.8 + Math.random() * 8;
-				this.ySpeed = 0.8 + Math.random() * 4;
-				this.flip = Math.random();
-			}
-			this.ctx.globalAlpha = this.opacity;
-			this.ctx.drawImage(
-				this.img,
-				this.x,
-				this.y,
-				this.w * (0.6 + (Math.abs(Math.cos(this.flip)) / 3)),
-				this.h * (0.8 + (Math.abs(Math.sin(this.flip)) / 5))
-			);
-		}
-
-		animate() {
-			this.x += this.xSpeed;
-			this.y += this.ySpeed;
-			this.flip += this.flipSpeed;
-			this.draw();
-		}
-	}
-
-	return (
-		<div>
-			{loading ? <Loader /> : ""}
-			<div className=" relative flex overflow-hidden mx-auto w-full">
-				<PetalCanvas />
-				<div
-					className="absolute h-full w-full top-0 left-0 spotlight opacity-95">
-				</div>
-
-				<div className='heading1 flex flex-col justify-center items-center' style={{ 'background': 'transparent' }}>
-					<div className="spree-title" style={{ 'padding': '0 25px' }}>
-						<img src={spreedate} alt="Spree dates" />
-					</div>
-					<div>
-						<img src={rasengan} alt="Rasengan" />
-					</div>
-
-				</div>
-
-				<div className="eat"></div>
-			</div>
-		</div>
-	)
-}
+                <div className="eat"></div>
+            </div>
+        </div>
+    );
+};
 
 export default Hero;
