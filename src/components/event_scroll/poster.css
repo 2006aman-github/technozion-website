@@ -1,0 +1,50 @@
+/* src/components/Poster.css */
+.poster {
+  background-color: rgba(0, 0, 0, 0.8);
+  border: 2px solid #16f6f3;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease;
+  max-height: 30em;
+  z-index: 5;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 1);
+}
+
+.poster:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 0 30px rgba(0, 255, 255, 1);
+}
+
+.poster-image {
+  flex: 1 1 auto;
+}
+
+h2 {
+  font-size: 1.3em;
+  margin: 15px 0 10px;
+  color: #16f6f3;
+}
+
+p {
+  color: #16f6f3;
+  font-size: 1em;
+}
+
+
+
+@media (max-width: 768px) {
+  .poster {
+    padding: 15px;
+    max-height: 80em;
+  }
+
+  h2 {
+    font-size: 1.25em;
+  }
+
+  p {
+    font-size: 0.9em;
+  }
+}

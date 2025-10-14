@@ -1,212 +1,185 @@
-@media screen and (min-width: 992px) {
-	.section {
-		width: 95vw;
-	}
+:root{
+  --neon-cyan: #00fff0;
+  --neon-fill: rgba(0,255,240,0.95);
+  --panel-dark: rgba(0,0,0,0.6);
+    --neon-dim: rgba(0,255,240,0.18);
 }
 
-/* .spons_line {
-	/* border: 2px solid #f4d4d8; 
-	border-radius: 20px;
-	background: linear-gradient(to right, #f4d4d8, #e079ad, #ca85b8);
-} */
-
-.title {
-	background-color: black;
-	margin: auto;
-	display: flex;
-	flex-direction: column;
-	padding: 10px;
+/* container + canvas */
+.events-container {
+  position: relative;
+  height: 90vh;
+  width: 100vw;
+  overflow: hidden;
+  top: 5vh;
+  z-index: 2;
 }
 
-.kala {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-	width: 30%;
-	justify-content: center;
+.web-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
 }
 
-.sponsors {
-	display: grid;
-	grid-column: 2;
-	grid-row: 2;
+/* floating 'EVENT' logo at top center */
+.EventImg {
+  position: absolute;
+  top: 2%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 8;
+  width: 14%;
+}
+.EventImg img { width: 100%; display:block; }
 
+/* framed area that contains tabs + panel */
+.events-frame{
+  position: relative;
+  margin: 6.5rem auto 0;
+  width: 92%;
+  max-width: 1300px;
+  border-radius: 6px;
+  padding: 1rem 1rem 4.5rem;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+  z-index: 6;
 }
 
-
-.sss,
-.row {
-	display: flex;
-	flex-direction: row;
-	flex-flow: row wrap;
-	justify-content: space-around;
+/* neon top glow line */
+.events-frame::before{
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+  box-shadow: 0 0 20px rgba(0,255,240,0.25);
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  z-index: 10;
 }
 
-.sponscont {
-	background: rgb(14, 14, 14);
-	background-size: cover;
-	background-position: center;
-	background-attachment: fixed;
-	color: white;
-	--bs-gutter-x: 0 !important;
-	font-weight: 800;
+/* Tabs row (centered) */
+.tabs-row {
+  display:flex;
+  justify-content:center;
+  gap: 2.6rem;
+  align-items:center;
+  z-index: 11;
+  margin-bottom: 1.4rem;
 }
 
-.sponscont .current {
-	text-transform: uppercase;
+/* tab buttons styled like your neon screenshot */
+.tab-btn{
+  background: rgba(0,0,0,0.45);
+  color: var(--neon-cyan);
+  border: 2px solid rgba(0,255,230,0.85);
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+  transition: transform .16s ease, background .12s ease, color .12s ease;
+}
+.tab-btn:hover{ transform: translateY(-3px); }
+.tab-btn.active{
+  background: var(--neon-dim);
+  color: #041617; /* dark text inside neon filled */
+  border-color: rgba(0,200,200,0.98);
+  box-shadow: 0 10px 30px rgba(0,255,240,0.14);
 }
 
-.sponscont h2 {
-	text-align: center;
-	margin: 2rem 0;
-	font-weight: 900;
+/* main panel (replaces cards) */
+.tab-panel{
+  width: 84%;
+  margin: 0 auto;
+  min-height: 44vh;
+  border-radius: 10px;
+  background-color: var(--panel-dark);
+  background-size: cover;
+  background-position: center;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.6), 0 20px 40px rgba(0,0,0,0.6);
+  z-index: 8;
+  position: relative;
+  overflow: hidden;
 }
 
-.sponscont>.c {
-	display: flex;
-	justify-content: center;
+.panel-overlay{
+  padding: 2rem;
+  height: 100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  gap: 0.6rem;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.705), rgba(0,0,0,0.55));
 }
 
-
-.sponsitem {
-	background-color: white;
-	max-width: 300px;
-	min-width: 200px;
-	width: 300px;
-	color: black;
-	margin: 1rem;
-	padding: 0;
-	border-radius: 10px;
-	/* font-family: "Source Sans Pro", sans-serif; */
-	/* font-weight: 800; */
-	font-size: larger;
+.panel-title{
+  color: var(--neon-cyan);
+  font-size: 1.6rem;
+  margin: 0;
+  letter-spacing: 1px;
 }
 
-.sponsitem .title-sponsor {
-	color: black;
-	text-decoration: none;
+.panel-sub{
+  color: rgba(255,255,255,0.85);
+  margin: 0;
 }
 
-.sponsitem .title-sponsor:hover {
-	color: var(--c);
+/* Enter button */
+.panel-actions{ margin-top: 1.2rem; }
+.enter-btn{
+  background: transparent;
+  border: 2px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  padding: 0.7rem 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 800;
+  transition: background .15s ease, color .15s ease;
+}
+.enter-btn:hover{ background: var(--neon-cyan); color: #041617; }
+
+/* portal and flame (bottom centered) */
+.Portal{
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  pointer-events: none;
+}
+.portal-img{
+  width: 900px;
+  max-width: 92vw;
+  height: auto;
+  display:block;
+}
+.Flame-img{
+  position: absolute;
+  bottom: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  width: 60%;
+  max-width: 650px;
+  height: auto;
+  pointer-events: none;
 }
 
-.sponsitem>.image-container {
-	width: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: 1.3rem;
-	overflow: hidden;
+/* responsive tweaks */
+@media (max-width: 1024px){
+  .EventImg{ width: 22%; top: 1.5% }
+  .tab-btn{ padding: 8px 16px; font-size: 0.98rem; }
+  .tab-panel{ width: 92%; min-height: 34vh; }
+  .portal-img{ width: 100%; }
 }
 
-.sponsitem>.image-container>img {
-	max-width: 250px;
-	min-width: 150px;
-	width: 100%;
-	height: 200px;
-	object-fit: contain;
-	transition: 1s;
-}
-
-.sponsitem>.image-container>img:hover {
-	transform: scale(1.1);
-}
-
-.sponsitem>.text-container>hr {
-	margin: 0;
-}
-
-.sponsitem>.text-container>.container-fluid {
-	text-align: center;
-	padding: 10px 0;
-}
-
-.sponsitem>.text-container>.container-fluid p {
-	margin-bottom: 0;
-}
-
-.current {
-	width: 100%;
-}
-
-.buttoni {
-	background-color: #232754;
-	border-radius: 10px;
-	color: #f4d4d8;
-	box-shadow: #d2828b;
-	animation: pulse-animation 2s ease-in-out infinite alternate;
-	padding: 1%;
-	opacity: 70%;
-}
-
-.buttoni:hover {
-	opacity: 100%;
-}
-
-@keyframes pulse-animation {
-	0% {
-		transform: scale(0.95);
-	}
-
-	50% {
-		transform: scale(1.05);
-	}
-
-	100% {
-		transform: scale(0.95);
-	}
-
-}
-
-
-.boxi {
-	background-color: #f4d4d8;
-	border-radius: 10px;
-	z-index: 1;
-	height: 5rem;
-	margin-left: 5%;
-	margin-right: 5%;
-}
-
-@media (max-width :500px) {
-	.boxi {
-		margin-left: 2%;
-		margin-right: 2%;
-	}
-
-	.buttoni {
-		width: 30%;
-		height: 90%;
-		animation: none;
-
-	}
-}
-
-
-
-.bg-rot1 {
-	position: fixed;
-	top: 0;
-	left: -25%;
-	width: 250%;
-	height: 250%;
-	object-fit: cover;
-	z-index: 0;
-	/* Ensure the image is behind all content */
-	opacity: 0.2;
-	/* Adjust the opacity as needed */
-}
-
-.bg-rot2 {
-	position: fixed;
-	top: 0;
-	left: -125%;
-	width: 250%;
-	height: 250%;
-	object-fit: cover;
-	z-index: 0;
-	/* Ensure the image is behind all content */
-	opacity: 0.2;
-	/* Adjust the opacity as needed */
+@media (max-width: 480px){
+  .tabs-row{ gap: 1rem; }
+  .tab-btn{ padding: 6px 10px; font-size: 0.9rem; border-radius: 6px; }
+  .EventImg{ width: 34% }
+  .tab-panel{ width: 96%; min-height: 24vh; }
+  .Flame-img{ width: 90%; bottom: 4%; }
 }

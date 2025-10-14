@@ -1,212 +1,93 @@
-import React, { useRef, useState } from "react";
-import rasengan from './Rasengan2.png';
-import spreedate from './LOGOS-052.png';
-import petalImager from './petal.png'
+import React, { useEffect, useState } from "react";
 import './index.css';
-// import { useAuth } from "../../Context/AuthManager";
-import Loader from "../Loader";
-import { useEffect } from "react";
+import { WebCanvas } from "../bg_animation/bg_animate";
+import tzlogo_with_date from "./tzlogo_with_date.png";
+import TypingWords from "./TypingWords";
+import NumCount from "../utils/NumCount";
+import { Link } from "react-router-dom";
 
-var mar = 10;
-var imsz = 264;
-const COLSZ = mar + imsz;
+// Countdown Component
+const CountdownTimer = ({ targetDate }) => {
+    const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+    const [isTimeUp, setIsTimeUp] = useState(false);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const now = new Date();
+            const diff = targetDate - now;
+            if (diff < 0) {
+                clearInterval(interval);
+                setIsTimeUp(true);  // Mark timer as finished
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            setTimeLeft({ days, hours, minutes, seconds });
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [targetDate]);
+
+    if (isTimeUp) {
+        return null; // Hide the entire countdown component when the time is up
+    }
+
+    return (
+        <div className="countdown-container">
+            <div className="countdown-clock">
+                <div className="time-box">
+                    <span className="time-numeric">{timeLeft.days}</span>
+                    <span className="time-label">Days</span>
+                </div>
+                <div className="time-box">
+                    <span className="time-numeric">{timeLeft.hours}</span>
+                    <span className="time-label">Hours</span>
+                </div>
+                <div className="time-box">
+                    <span className="time-numeric">{timeLeft.minutes}</span>
+                    <span className="time-label">Minutes</span>
+                </div>
+                <div className="time-box">
+                    <span className="time-numeric">{timeLeft.seconds}</span>
+                    <span className="time-label">Seconds</span>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 const Hero = () => {
+    // Set the target date and time for IST (Indian Standard Time)
+    const targetDate = new Date("2025-10-24T10:30:00Z"); // This is 4:00 PM IST on October 24th , 2025
 
-	const [loading, setLoading] = useState(true);
+    return (
+        <div>
+            <div className="relative flex overflow-hidden mx-auto w-full">
+                <WebCanvas />
+                <div className="absolute h-full w-full top-0 left-0 spotlight opacity-95"></div>
 
-	//loading effect
-	useEffect(() => {
-		// console.time("im");
-		Promise.all(Array.from(document.images).filter(img => !img.complete).map(img => new Promise(resolve => {
-			img.onload = img.onerror = resolve;
-		})))
-			.then(() => {
-				console.log('Images finished loading');
-				setLoading(false);
-			}).catch(() => {
-				console.log('Some images failed to load');
-			});
-	}, []);
+                <div className='heading1 flex flex-col justify-center items-center' style={{ 'background': 'transparent' }}>
+                    <div className="main-logo">
 
-	// const { user } = useAuth();
-
-	let width = window.innerWidth - mar;
-	let numCols = Math.max(3, Math.ceil(width / COLSZ));
-	let colsz = width / numCols;
-	document.querySelector(":root").style.setProperty('--imsz', colsz - mar + 'px');
-
-
-	// const updateSpotlight = (e) => {
-	//     let x = ((e.pageX / window.innerWidth) * 100).toFixed(0);
-	//     let y = ((e.pageY / window.innerHeight) * 100).toFixed(0);
-
-	//     if (ref) ref.style.background = `radial-gradient(circle at ${x}% ${y}%, ${size}`
-	// };
-	// function play(e) {
-	//     let myAudio = document.querySelector("audio");
-	//     myAudio.paused ? myAudio.play() : myAudio.pause();
-	//     e.classList.toggle('pressed')
-	//     let mystyle1=document.getElementsByClassName("myid1")[0];
-	//     let mystyle2=document.getElementsByClassName("myid2")[0];
-	//     console.log(mystyle1.classList);
-	//     console.log(mystyle2.classList);
-	//     mystyle1.classList.toggle('mystyle1');
-	//     mystyle2.classList.toggle('mystyle2');
-	//   }
-
-	// const mouseMove = (e) => {
-	//     if(traceback) clearInterval(traceback);
-	//     traceback = 0;
-	//     updateSpotlight(e);
-	// }
-	// const mouseLeave = (e) => {
-	//     if (!ref) return;
-	//     let s = ref.style.background;
-	//     let x = parseInt(s.substring(26));
-	//     let y = parseInt(s.substring(30));
-	//     if(traceback) mouseMove(e);
-	//     traceback = setInterval(() => {
-	//         if(!ref) {
-	//             clearInterval(traceback);
-	//             return;
-	//         }
-	//         ref.style.background = `radial-gradient(circle at ${x}% ${y}%, ${size}`;
-	//         x = x + (50 - x) / 100;
-	//         y = y + (50 - y) / 100;
-	//     }, 10)
-	// }
-
-	const PetalCanvas = () => {
-		const canvasRef = useRef(null);
-		const [ctx, setCtx] = useState(null);
-		const [petalArray, setPetalArray] = useState([]);
-		const [petalImg, setPetalImg] = useState(new Image());
-
-		useEffect(() => {
-			const canvas = canvasRef.current;
-			if (!canvas) return; // Check if canvas exists
-
-			const context = canvas.getContext('2d');
-			setCtx(context);
-
-			canvas.width = window.innerWidth;
-			canvas.height = window.innerHeight;
-
-			const handleResize = () => {
-				canvas.width = window.innerWidth;
-				canvas.height = window.innerHeight;
-			};
-
-			window.addEventListener('resize', handleResize);
-
-			return () => {
-				window.removeEventListener('resize', handleResize);
-			};
-		}, []);
-
-		useEffect(() => {
-			const loadPetalImg = () => {
-				const img = new Image();
-				img.src = petalImager;
-				img.onload = () => setPetalImg(img);
-			};
-			loadPetalImg();
-		}, []);
-
-		useEffect(() => {
-			if (ctx && petalImg) {
-				const TOTAL = 200;
-				const newPetalArray = [];
-				for (let i = 0; i < TOTAL; i++) {
-					newPetalArray.push(new Petal(ctx, petalImg));
-				}
-				setPetalArray(newPetalArray);
-			}
-		}, [ctx, petalImg]);
-
-		useEffect(() => {
-			if (ctx && petalArray.length > 0) {
-				const render = () => {
-					if (canvasRef.current) {
-						ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-						petalArray.forEach(petal => petal.animate());
-						window.requestAnimationFrame(render);
-					}
-				};
-				window.requestAnimationFrame(render);
-			}
-		}, [ctx, petalArray]);
-
-		return <canvas ref={canvasRef}></canvas>;
-	};
-
-	class Petal {
-		constructor(ctx, img) {
-			this.x = Math.random() * ctx.canvas.width;
-			this.y = (Math.random() * ctx.canvas.height * 2) - ctx.canvas.height;
-			this.w = 25 + Math.random() * 15;
-			this.h = 20 + Math.random() * 10;
-			this.opacity = this.w / 40;
-			this.flip = Math.random();
-			this.xSpeed = 0.8 + Math.random() * 8;
-			this.ySpeed = 0.8 + Math.random() * 4;
-			this.flipSpeed = Math.random() * 0.03;
-			this.ctx = ctx;
-			this.img = img;
-		}
-
-		draw() {
-			if (!this.ctx) return; // Check if ctx exists
-
-			if (this.y > this.ctx.canvas.height || this.x > this.ctx.canvas.width) {
-				this.x = -this.img.width;
-				this.y = (Math.random() * this.ctx.canvas.height * 2) - this.ctx.canvas.height;
-				this.xSpeed = 0.8 + Math.random() * 8;
-				this.ySpeed = 0.8 + Math.random() * 4;
-				this.flip = Math.random();
-			}
-			this.ctx.globalAlpha = this.opacity;
-			this.ctx.drawImage(
-				this.img,
-				this.x,
-				this.y,
-				this.w * (0.6 + (Math.abs(Math.cos(this.flip)) / 3)),
-				this.h * (0.8 + (Math.abs(Math.sin(this.flip)) / 5))
-			);
-		}
-
-		animate() {
-			this.x += this.xSpeed;
-			this.y += this.ySpeed;
-			this.flip += this.flipSpeed;
-			this.draw();
-		}
-	}
-
-	return (
-		<div>
-			{loading ? <Loader /> : ""}
-			<div className=" relative flex overflow-hidden mx-auto w-full">
-				<PetalCanvas />
-				<div
-					className="absolute h-full w-full top-0 left-0 spotlight opacity-95">
-				</div>
-
-				<div className='heading1 flex flex-col justify-center items-center' style={{ 'background': 'transparent' }}>
-					<div className="spree-title" style={{ 'padding': '0 25px' }}>
-						<img src={spreedate} alt="Spree dates" />
-					</div>
-					<div>
-						<img src={rasengan} alt="Rasengan" />
-					</div>
-
-				</div>
-
-				<div className="eat"></div>
-			</div>
-		</div>
-	)
-}
+                  <span className="lg:text-5xl text-3xl font-bold mb-4 uppercase animate-pulse cursor-pointer">
+          <TypingWords words={['TECHNOZION 2025', 'COMING SOON']} />
+        </span>
+                    </div>
+                    {/* Countdown Clock */}
+                    <CountdownTimer targetDate={targetDate} />
+                    <section className="text-center uppercase mt-4 lg:text-3xl text-xl font-bold">
+                         Prize pool worth ₹ <Link to='/events'><NumCount num={243000} className='hover:opacity-70 duration-100 cursor-pointer' /> /-</Link>
+                    </section>
+                    <section className="text-center mt-4 text-xl font-bold">
+                    </section>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 export default Hero;

@@ -1,149 +1,132 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { ImCross } from "react-icons/im";
-// import { useUserAuth } from "../../context/userAuthContext";
-
-import springspree from "./springspree2.png";
+import chota_logo from "./logo-03.png";
 import './index.css';
 
-const isMobileView = window.innerWidth <= 725;
 const oldNavigation = [
-	{ name: "HOME", link: "/" },
-	{ name: "EVENTS", link: "/events" },
-	// { name: "SPONSORS", link: "/sponsors" },
-	{ name: "TEAM", link: "/team" },
-	{ name: "FAQs", link: "/faq" },
-	// { name: "PRO SHOWS", link: "/proshows" }
+  { name: "HOME", link: "/" },
+  { name: "ABOUT", link: "/about" },
+  { name: "EVENTS", link: "/events" },
+];
+
+const rightNavigation = [
+  { name: "GALLERY", link: "/gallery" },
+  { name: "TEAM", link: "/team" },
+  { name: "REGISTER", link: "/auth/register" },
+];
+
+const dropList = [
+  { name: "List1", link: "/l1" },
+  { name: "List2", link: "/l2" },
+  { name: "List3", link: "/l3" },
 ];
 
 export default function Navbar() {
-	const [navigation, setNavigation] = useState(oldNavigation);
-	const [menuOpen, setMenuOpen] = useState(false);				//for hamburger menu
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 725);
+  const [navigation, setNavigation] = useState(oldNavigation);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 725);
+  const [showDropdown, setShowDropdown] = useState(false);
 
-	useEffect(() => {
-		const handleResize = () => {
-			setIsMobileView(window.innerWidth <= 725);
-		};
-		window.addEventListener('resize', handleResize);
-		return () => {
-			window.removeEventListener('resize', handleResize);
-		};
-	}, []);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth <= 725);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
-	useEffect(() => {
-		if (isMobileView) {
-			setNavigation([...oldNavigation, { name: "REGISTER", link: "/auth" }]);
-		} else {
-			setNavigation(oldNavigation);
-		}
-	}, [isMobileView]);
+  useEffect(() => {
+    if (isMobileView) {
+      
+      setNavigation([...oldNavigation, ...rightNavigation]);
+    } else {
+     
+      setNavigation(oldNavigation);
+    }
+  }, [isMobileView]);
 
-	// const { user, logOut } = useUserAuth();	//for backend integration
+  const closeMenu = () => {
+    setMenuOpen(false);
+    setShowDropdown(false);
+  };
 
-	// useEffect(() => {
-	// 	if (user) {
-	// 		setIsLoggedIn(true);
-	// 	} else {
-	// 		setIsLoggedIn(false);
-	// 	}
-	// }, [user])
+  const toggleDropdown = (e) => {
+    e.preventDefault();
+    setShowDropdown(!showDropdown);
+  };
 
-	// async function handleLogOut() {
-	// 	await logOut();
-	// 	setIsLoggedIn(false);
-	// }
+  const listItems = navigation.map((menuItem, index) => (
+    <li key={index}>
+      {menuItem.name === "REVENTS" ? (
+        <div className="dropdown2-trigger">
+          <a onClick={toggleDropdown}>{menuItem.name}</a>
+          {showDropdown && (
+            <ul className="dropdown2">
+              {dropList.map((dropItem, idx) => (
+                <li key={idx}>
+                  <NavLink to={dropItem.link} onClick={closeMenu}>
+                    {dropItem.name}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ) : (
+        <NavLink to={menuItem.link} onClick={closeMenu}>
+          {menuItem.name}
+        </NavLink>
+      )}
+    </li>
+  ));
 
-	const closeMenu = () => {
-		setMenuOpen(false);
-	};
+  const rightNavItems = rightNavigation.map((menuItem, index) => (
+    <li key={index}>
+      <NavLink to={menuItem.link} onClick={closeMenu}>
+        {menuItem.name}
+      </NavLink>
+    </li>
+  ));
 
-	const [dropdownOpen, setDropdownOpen] = useState(false);
+  return (
+    <>
+      {!menuOpen ? (
+        <div className="logo" > 
+          <Link to="./" onClick={closeMenu}>
+            <img src={chota_logo} alt="logo1" />
+          </Link>
+        </div> 
+      ) : null}
 
-	const toggleDropdown = () => {
-		setDropdownOpen(!dropdownOpen);
-	};
+      <nav className={menuOpen ? 'menu-open' : 'menu-closed'}>
+        <div
+          className="menu"
+          onClick={() => {
+            setMenuOpen(!menuOpen);
+          }}
+        >
+          {menuOpen ? (
+            <ImCross className='cross' />
+          ) : (
+            <>
+              <span className={menuOpen ? '' : 'ham'}></span>
+              <span className={menuOpen ? '' : 'ham'}></span>
+              <span className={menuOpen ? '' : 'ham'}></span>
+            </>
+          )}
+        </div>
+        <ul className={menuOpen ? "open" : ""}>{listItems}</ul>
+      </nav>
 
-	const closeDropdown = () => {
-		setDropdownOpen(false);
-	};
-
-	const listItems = navigation.map((menuItem, index) => {
-		if (menuItem.name === "EVENTS") {
-			return (
-				<li key={index} className="dropdown-menu">
-					<a to="#" onClick={toggleDropdown} style={{ color: '#f4d4d8' }}>{menuItem.name} {dropdownOpen ? '▲' : '▼'}</a>
-					<ul className="dropdown-content" style={{ display: dropdownOpen ? 'block' : 'none' }}>
-						<li ><NavLink to="/proshows" onClick={() => { closeMenu(); closeDropdown(); }}>PRO SHOWS</NavLink></li>
-						<li ><NavLink to={menuItem.link} onClick={() => { closeMenu(); closeDropdown(); }}>EVENTS</NavLink></li>
-					</ul>
-				</li >
-			);
-		} else {
-			return (
-				<li key={index}>
-					<NavLink to={menuItem.link} onClick={() => { closeMenu(); closeDropdown(); }}>{menuItem.name}</NavLink>
-				</li>
-			);
-		}
-	});
-
-	return (
-		<>
-			{!menuOpen ? (
-				<div className="logo">
-					<Link to="./" onClick={closeMenu}>
-						<img src={springspree} alt="logo1" />
-					</Link>
-				</div>
-			) : (null
-			)}
-			<nav className={menuOpen ? 'menu-open' : 'menu-closed'}>
-				<div
-					className="menu"
-					onClick={() => {
-						setMenuOpen(!menuOpen);
-					}}
-				>
-					{
-						(menuOpen) ? (
-							<ImCross className='cross' />
-						) :
-							<>
-								<span className={menuOpen ? '' : 'ham'}></span>
-								<span className={menuOpen ? '' : 'ham'}></span>
-								<span className={menuOpen ? '' : 'ham'}></span>
-							</>
-					}
-
-				</div>
-				{/* <div> */}
-				<ul className={menuOpen ? "open" : ""}>{listItems}</ul>
-				{/* </div> */}
-
-
-				<div className="reg-login">
-					{isLoggedIn ? (
-						<button
-							onClick={() => {
-								// handleLogOut();
-							}}
-						>
-							Log Out
-						</button>
-					) : (
-						<ul style={{ justifyContent: 'flex-end' }}>
-							<li style={{ fontSize: '1.2rem' }}>
-								<NavLink to="/auth" onClick={closeMenu}>
-									Register
-								</NavLink>
-							</li>
-						</ul>
-					)}
-				</div>
-			</nav >
-
-		</>
-	);
+      {/* Right side navbar only appears on larger screens */}
+      {!isMobileView && (
+        <nav className="right-nav">
+          <ul>{rightNavItems}</ul>
+        </nav>
+      )}
+    </>
+  );
 }
