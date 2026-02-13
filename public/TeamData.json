@@ -1,0 +1,120 @@
+[
+  {
+    "name": "G. V. Sai Vamsi",
+    "position": "SAC Secretary Technical",
+    "email": "sec_technical@nitw.ac.in",
+     "image":"technical_secretary.jpg"
+    
+  },
+  {
+    "name": "R. Karthikeya Reddy",
+    "email": "sec_sports@nitw.ac.in",
+    "position": "SAC Secretary Sports",
+     "image":"sports_secretary.jpg"
+   
+  },
+ 
+  {
+    "name": "B Y S Harsha",
+    "email": "sec_fms@nitw.ac.in",
+    "position": "SAC Secretary Film and Music",
+    "image":"films_secretary.jpg"
+    
+  },
+  {
+    "name": "Samanvith Reddy",
+    "contactNo": "",
+    "position": "SAC Secretary Cultural",
+   "email": "sec_cultural@nitw.ac.in",
+   "image":"cultural_secretary.jpg"
+    
+  },
+  {
+    "name":"Sai Pavan Godasu",
+    "position": "Joint Secretary Cultural",
+   "email": "",
+   "image":"cultural_joint.jpg"
+   
+  },
+  {
+    "name":"Abhiram Gudivenuka",
+     
+    "position": "Joint Secretary Film and music",
+   "email": "",
+   "image":"fms_joint_secretary.jpg"
+    
+  },
+  
+  {
+    "name":"Dheeraj Bhasaru",
+      "contactNo": "9826078917",
+    "position": "Joint Secretary Sports",
+   "email": "",
+   "image":"technical_joint_secretary.jpg"
+    
+  },
+  {},
+
+  {
+    "name":"Manikanta Reddy Sama",
+    "contactNo":"7032716998",
+    "image":"manikanta.jpg",
+    "position":"Dev Team Head",
+    "email":"sm21csb0a50@student.nitw.ac.in"
+
+  },
+  {
+    "name":"Vikram",
+    "contactNo":"9929523068",
+    "image":"vikram.jpg",
+    "position":"Lead Developer",
+    "email":"vv22csb0b32@student.nitw.ac.in"
+
+  },
+  {
+    "name":"Anubhav",
+    "contactNo":"6378827728",
+    "image":"anubhav.jpg",
+    "position":"Lead Developer",
+    "email":"av22csb0b27@student.nitw.ac.in"
+
+  },
+  {
+    "name":"Prashant",
+    "contactNo":"7739902211",
+    "image":"prashant.jpg",
+    "position":"Developer",
+    "email":"pr22csb0b03@student.nitw.ac.in"
+
+  },
+  {
+    "name":"Sahil",
+    "contactNo":"8168298651",
+    "image":"sahil.jpg",
+    "position":"Designer",
+    "email":"sy22csb0b20@student.nitw.ac.in"
+
+  },
+  {
+    "name":"Shivang",
+    "contactNo":"7651935316",
+    "position":"Lead Developer",
+    "image":"shivang.jpg",
+     "email":"sk22eeb0a24@student.nitw.ac.in"
+  },
+  {
+    "name":"Aman",
+    "contactNo":"8328352932",
+    "image":"aman.jpg",
+    "position":"Developer",
+    "email":"ac23ceb0b06@student.nitw.ac.in"
+  },
+  {
+    "name":"Bharat Jain",
+    "contactNo":"9729322358",
+    "image":"bharat.jpg",
+    "position":"Designer",
+    "email":"bj24mac2r06@student.nitw.ac.in"
+  }
+
+]

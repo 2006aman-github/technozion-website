@@ -1,20 +1,21 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { About } from '../components/About';
+import   Events   from '../components/Events';
+import { Displayevents } from '../components/DisplayEvents';
 import AuthPage from '../components/Authpage/AuthPage';
 import Home from '../components/Home';
-import Events from '../components/Events';
-import Profile from '../components/Profile/Profile';
 import Sponsors from '../components/Sponsors/Sponsors';
-import Teams from '../components/Teams/Teams';
-// import EachTeam from '../components/Teams/EachTeam'
 import { useAuth } from './AuthManager';
-import FAQS from '../components/FAQ/FAQ_final';
-
-import { Register } from '../components/Register';
-import Proshow from '../components/Proshow';
-import EachTeam from '../components/Teams/EachTeam';
+// import { Register } from '../components/Register';
+import { Register } from '../components/Register1/register.js';
+import { Gallery } from '../components/Gallery/gallery.js';
+import { Team } from '../components/Team/team.js';
 import { useLocation } from 'react-router-dom';
+import Card from '../components/card/card.jsx';
+
+import Index from '../components/event_scroll/index.js';
+import { ComingSoon } from "../components/ComingSoon/ComingSoon.jsx";
 
 const RoutesManager = () => {
 	const { user } = useAuth();
@@ -22,34 +23,31 @@ const RoutesManager = () => {
 	window.scroll(0,0);
 	return (
 		<Routes>
-			{/* If user is not logged in, show only AuthPage */}
 			{!user ? (
 				<>
-					<Route path="/auth" element={<AuthPage />} />
-					<Route path="/register" element={<AuthPage />} />
-					<Route path="/profile" element={<AuthPage />} />
+					{/* <Route path="/auth" element={<AuthPage />} /> */}
+					{/* <Route path="/register" element={<AuthPage />} /> */}
 				</>
 			) : (
 				<>
-					<Route path="/auth" element={<Register />} />
-					<Route path="/register" element={<Register />} />
-					<Route path="/profile" element={<Profile />} />
+					{/* <Route path="/auth" element={<Register />} /> */}
+					{/* <Route path="/register" element={<Register />} /> */}
 				</>
 			)}
 
 			<Route path="/" element={<Home />} />
-			<Route path="/about" element={<About />} />
-			<Route path="/sponsors" element={<Sponsors />} />
-			{/* <Route path='/blogs' element={<Blogs />} /> */}
-			{/* <Route path="/blogs/:blogId" element={<BlogDetail />} /> */}
-			<Route path="/events/" element={<Events />} />
-			<Route path="/team" element={<Teams />} />
-			<Route
-				path="/team/:teamname"
-				element={<EachTeam state={location.state} />}
-			/>
-			<Route path="/faq" element={<FAQS />} />
-			<Route path="/proshows" element={<Proshow />} />
+			<Route path="*" element={<ComingSoon />} />
+			{/* <Route path="/about" element={<About />} /> */}
+			{/* <Route path="/sponsors" element={<Sponsors />} /> */}
+			<Route path="/events" element={<Index />} />
+			{/* <Route path="/displayevents" element={<Displayevents />} /> */}
+			<Route path="/team" element={<Team />} />
+			{/* <Route path="/register" element={<Register />} /> */}
+			{/* <Route path="/gallery" element={<Gallery />} /> */}
+			{/* <Route path="/index" element={<Index />} /> */}
+			<Route path="/card" element={<Card />} /> Route for the card component
+
+			
 		</Routes>
 	);
 };

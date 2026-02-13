@@ -1,26 +1,17 @@
-import './index.css';
+// Loader.jsx
+import React from 'react';
+import './Loader.css'; // Import the CSS for styling
+import tz_img from "./finalDraft.png";
+import r1_img from "./finalDraft_2.png";
+import r2_img from "./finalDraft_3.png";
 
-import rangoli_outer from './rangoli-outer.png';
-import rangoli_inner from './rangoli-inner.png';
-
-export const Loader = ({ type }) => {
+export const Loader = () => {
     return (
         <div className="loader">
-            {type===true ? (
-                <>
-                    <img className="spin2-5" src={rangoli_outer} alt="Circular Image2" />
-                    <img className="spin1-5" src={rangoli_inner} alt="Circular Image1" />
-                </>
-            ) : (
-                <>
-                    <img className="spin" src={rangoli_inner} alt="Circular Image1" />
-                    <img className="spin2" src={rangoli_outer} alt="Circular Image2" />
-                </>
-            )}
+            <img src={tz_img} alt="Static" className="static-image" />
+            <img src={r1_img} alt="Clockwise" className="rotating clockwise" />
+            <img src={r2_img} alt="Anticlockwise" className="rotating anticlockwise" />
         </div>
-    )
-}
-
-export default Loader;
-
+    );
+};
 
